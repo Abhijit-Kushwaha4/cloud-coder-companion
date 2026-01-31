@@ -6,11 +6,17 @@ import { Sidebar } from './Sidebar';
 import { EditorTabs } from './EditorTabs';
 import { MonacoEditor } from './MonacoEditor';
 import { StatusBar } from './StatusBar';
-import { CommandPalette } from './CommandPalette';
+import { CommandPalette } from './CommandPaletteEnhanced';
+import { AIContextMenu } from './AIContextMenu';
 import { useIDEStore } from '@/stores/ideStore';
 
 export function IDELayout() {
-  const { sidebarVisible, settings } = useIDEStore();
+  const { sidebarVisible, settings, openFiles, editorGroups, activeGroupId } = useIDEStore();
+  
+  // Get current file for context menu
+  const activeGroup = editorGroups.find(g => g.id === activeGroupId);
+  const activeTab = activeGroup?.tabs.find(t => t.id === activeGroup.activeTabId);
+  const activeFile = openFiles.find(f => f.id === activeTab?.id);
   
   // Apply theme class
   useEffect(() => {
@@ -47,15 +53,20 @@ export function IDELayout() {
           
           {sidebarVisible && <ResizableHandle withHandle />}
           
-          {/* Editor area */}
+          {/* Editor area with AI context menu */}
           <ResizablePanel defaultSize={80}>
-            <div className="h-full flex flex-col bg-editor">
-              {/* Tabs */}
-              <EditorTabs />
-              
-              {/* Monaco Editor */}
-              <MonacoEditor />
-            </div>
+            <AIContextMenu 
+              selectedCode={activeFile?.content || ''}
+              language={activeFile?.language}
+            >
+              <div className="h-full flex flex-col bg-editor">
+                {/* Tabs */}
+                <EditorTabs />
+                
+                {/* Monaco Editor */}
+                <MonacoEditor />
+              </div>
+            </AIContextMenu>
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>

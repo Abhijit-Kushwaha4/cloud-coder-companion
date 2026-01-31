@@ -4,7 +4,7 @@ import { FileExplorer } from './FileExplorer';
 import { SearchPanel } from './SearchPanel';
 import { GitPanel } from './GitPanel';
 import { ExtensionsPanel } from './ExtensionsPanel';
-import { AIChatPanel } from './AIChatPanel';
+import { AISidebarPanel } from './AISidebarPanel';
 
 export function Sidebar() {
   const { activeSidebarPanel, sidebarWidth, sidebarVisible } = useIDEStore();
@@ -24,7 +24,7 @@ export function Sidebar() {
       case 'extensions':
         return <ExtensionsPanel />;
       case 'ai-chat':
-        return <AIChatPanel />;
+        return <AISidebarPanel />;
       default:
         return <FileExplorer />;
     }
